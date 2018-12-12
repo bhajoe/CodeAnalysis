@@ -39,7 +39,8 @@ public class Demo {
                 new VoidVisitorAdapter<Object>() {
                     public void visit(ClassOrInterfaceDeclaration n, Object arg) {
                         super.visit(n, arg);
-                        objClass.setName(n.getName());
+                        objClass.setName(n.getName()); 
+                        
                         //System.out.println("Jumlah method "+n.getMethods().size());
                         for (int i = 0; i < n.getMethods().size(); i++)
                         {
