@@ -76,7 +76,7 @@ public class Demo {
                 System.out.println("      - Volume : "+md.getHVolume());
                 System.out.println("      - Level : "+md.getHProgramLevel());
                 System.out.println("      - Effort : "+md.getHEffort());
-                System.out.println("      - Time : "+md.getHTime());
+                System.out.println("      - Time to Implement : "+md.getHTime());
             }
         }
         
