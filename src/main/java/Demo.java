@@ -40,7 +40,7 @@ public class Demo {
                     public void visit(ClassOrInterfaceDeclaration n, Object arg) {
                         super.visit(n, arg);
                         objClass.setName(n.getName()); 
-                        
+                        // Testing commit
                         //System.out.println("Jumlah method "+n.getMethods().size());
                         for (int i = 0; i < n.getMethods().size(); i++)
                         {
