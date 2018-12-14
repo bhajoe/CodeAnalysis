@@ -12,7 +12,10 @@ import com.github.javaparser.ast.expr.LiteralExpr;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.UnaryExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
+import com.github.javaparser.ast.stmt.DoStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.IfStmt;
+import com.github.javaparser.ast.stmt.WhileStmt;
 import com.github.javaparser.ast.type.PrimitiveType;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +31,7 @@ public class method{
     private ArrayList<String> operand;
     private Set<String> DistinctOperator;
     private Set<String> DistictOperand;
+    private Set<predicateNode> NodePredicate;
     private float HProgramLevel;
     private float HVolume;
     private float HDifficulty;
@@ -42,6 +46,7 @@ public class method{
         this.operator =  new ArrayList<>();
         this.DistinctOperator = new HashSet<>();
         this.DistictOperand = new HashSet<>();
+        this.NodePredicate = new HashSet<>();
         ExtractBody();
         CalculateHalstead();
     }
@@ -73,8 +78,6 @@ public class method{
     public float getHTime() {
         return HTime;
     }
-    
-    
     
     public MethodDeclaration getMd() {
         return md;
@@ -117,10 +120,73 @@ public class method{
                 nm.getVariables().forEach(var -> {
                     this.operand.add(var.getNameAsString());    
                 });
+            // Locate the predicate node
             } else if (node instanceof IfStmt) {
                 IfStmt ce = (IfStmt) node;
-                //System.out.println("Conditional"+ce.getElseStmt());
-                //this.operand.add(nm.toString());
+                ce.walk(nd ->{
+                    if (nd instanceof BinaryExpr)
+                    {
+                        BinaryExpr ndun = (BinaryExpr) nd;
+                        if (ndun.toString().indexOf("(") < 0)
+                        {
+                            predicateNode nodeP = new predicateNode();
+                            nodeP.setType("IF");
+                            nodeP.addCondition(ndun.asBinaryExpr());
+                            addNodePredicate(nodeP);
+                        }
+                    } 
+                });
+            } else if (node instanceof WhileStmt) {
+                WhileStmt ce = (WhileStmt) node;
+                ce.walk(nd ->{
+                    if (nd instanceof UnaryExpr)
+                    {
+                        //UnaryExpr ndun = (UnaryExpr) nd;
+                        //System.out.println("Unary "+ndun.toString());
+                    } else if (nd instanceof BinaryExpr)
+                    {
+                        BinaryExpr ndun = (BinaryExpr) nd;
+                        predicateNode nodeP = new predicateNode();
+                        nodeP.setType("While");
+                        nodeP.addCondition(ndun.asBinaryExpr());
+                        addNodePredicate(nodeP);
+                        //System.out.println("Binary "+ndun.toString());
+                    } 
+                });
+            } else if (node instanceof DoStmt) {
+                DoStmt ce = (DoStmt) node;
+                ce.walk(nd ->{
+                    if (nd instanceof UnaryExpr)
+                    {
+                        //UnaryExpr ndun = (UnaryExpr) nd;
+                        //System.out.println("Unary "+ndun.toString());
+                    } else if (nd instanceof BinaryExpr)
+                    {
+                        BinaryExpr ndun = (BinaryExpr) nd;
+                        predicateNode nodeP = new predicateNode();
+                        nodeP.setType("Do");
+                        nodeP.addCondition(ndun.asBinaryExpr());
+                        addNodePredicate(nodeP);
+                        //System.out.println("Binary "+ndun.toString());
+                    } 
+                });
+            } else if (node instanceof ForStmt) {
+                ForStmt ce = (ForStmt) node;
+                ce.walk(nd ->{
+                    if (nd instanceof UnaryExpr)
+                    {
+                        //UnaryExpr ndun = (UnaryExpr) nd;
+                        //System.out.println("Unary "+ndun.toString());
+                    } else if (nd instanceof BinaryExpr)
+                    {
+                        BinaryExpr ndun = (BinaryExpr) nd;
+                        predicateNode nodeP = new predicateNode();
+                        nodeP.setType("For");
+                        nodeP.addCondition(ndun.asBinaryExpr());
+                        addNodePredicate(nodeP);
+                        //System.out.println("Binary "+ndun.toString());
+                    } 
+                });
             }
         });
         this.DistinctOperator.addAll(this.operator);
@@ -184,5 +250,37 @@ public class method{
     {
         return (float) (Math.log(n) / Math.log(2));
     }
+
+    public Set<predicateNode> getNodePredicate() {
+        return NodePredicate;
+    }
+
+    public void addNodePredicate(predicateNode NodePredicate) {
+        if (!isObjectInSet(NodePredicate, (HashSet<predicateNode>) this.NodePredicate))
+        {
+            this.NodePredicate.add(NodePredicate);
+        }
+    }
+    
+    private boolean isObjectInSet(predicateNode object, HashSet<predicateNode> set) 
+    {
+        boolean result = false;
+
+        for(predicateNode o : set) {
+          if((o.getType().equals(object.getType())) && (o.getCondition().equals(object.getCondition()))) {
+            result = true;
+            break;
+          }
+        }
+
+        return result;
+     }
+    
+    public int getCyclomaticComplexity()
+    {
+        // McCabe CC => V(g) = P + 1;
+        return this.NodePredicate.size() + 1;
+    }
+    
     
 }

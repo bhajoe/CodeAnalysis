@@ -24,13 +24,31 @@ public class test {
     {
         int hasil;
         hasil = p * l;
-        if ((hasil > 20) && (hasil < 40))
+        if ((hasil > 20) && (hasil < 40) && (hasil > 15))
         {
             System.out.println("A");
-        } else
+        } else if (hasil == 10)
         {
             System.out.println("B");
+        } else if (hasil == 1)
+        {
+            
         }
+        while (hasil > 10)
+        {
+            hasil++;
+        }
+        
+        for (int i = 1; i <= 5; ++i) {
+
+         System.out.println("Outer loop iteration " + i);
+
+         for (int j = 1; j <=2; ++j) {
+            System.out.println("i = " + i + "; j = " + j);
+         }
+        
+        }
+        
         return hasil;
     }
 

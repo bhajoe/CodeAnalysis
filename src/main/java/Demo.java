@@ -1,19 +1,11 @@
 
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
-import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.expr.AssignExpr;
-import com.github.javaparser.ast.expr.BinaryExpr;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.UnaryExpr;
-import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.google.common.base.Strings;
 import com.joebe.codeAnalysis.file.DirExplorer;
-import com.joebe.codeAnalysis.file.NodeIterator;
 import com.joebe.codeAnalysis.data.classObject;
 import com.joebe.codeAnalysis.data.method;
+import com.joebe.codeAnalysis.data.predicateNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,6 +69,16 @@ public class Demo {
                 System.out.println("      - Level : "+md.getHProgramLevel());
                 System.out.println("      - Effort : "+md.getHEffort());
                 System.out.println("      - Time to Implement : "+md.getHTime());
+                if (md.getNodePredicate().size() > 0)
+                {
+                    System.out.println("      - Predicate Node : ");
+                    for (predicateNode nd : md.getNodePredicate())
+                    {
+                        System.out.println("           - : "+nd.getType()+" "+nd.getCondition().toString());
+                    }
+                }
+                System.out.println("      - Cyclomatic Complexity : "+md.getCyclomaticComplexity());
+                
             }
         }
         
