@@ -53,7 +53,7 @@ public class Demo {
     }
     
     public static void main(String[] args) {
-        File projectDir = new File("C:\\Users\\bhajoe\\Documents\\NetBeansProjects\\CodeAnalysis\\src\\main\\java\\testing");
+        File projectDir = new File("C:\\Users\\bayup\\Documents\\NetBeansProjects\\CodeAnalysis\\src\\main\\java\\testing");
         Demo lc = new Demo();
         for (classObject cls : lc.listClasses(projectDir))
         {

@@ -19,7 +19,11 @@ import com.github.javaparser.ast.stmt.WhileStmt;
 import com.github.javaparser.ast.type.PrimitiveType;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.sound.midi.Soundbank;
 
 /**
  *
@@ -123,80 +127,80 @@ public class method{
             // Locate the predicate node
             } else if (node instanceof IfStmt) {
                 IfStmt ce = (IfStmt) node;
-                System.out.println(ce.getCondition().toString());
-                ce.walk(nd ->{
-                    if (nd instanceof BinaryExpr)
+                List<String> ConditionList = extractCondition(ce.getCondition().toString(), false);
+                if (ConditionList.size() > 0)
+                {
+                    for (String condition : ConditionList)
                     {
-                        BinaryExpr ndun = (BinaryExpr) nd;
-                        if (ndun.toString().indexOf("(") < 0)
-                        {
-                            predicateNode nodeP = new predicateNode();
-                            nodeP.setType("IF");
-                            nodeP.addCondition(ndun.toString());
-                            addNodePredicate(nodeP);
-                        }
-                    } 
-                });
+                        predicateNode nodeP = new predicateNode();
+                        nodeP.setType("IF");
+                        nodeP.addCondition(condition);
+                        addNodePredicate(nodeP);
+                    }
+                } else
+                {
+                    predicateNode nodeP = new predicateNode();
+                    nodeP.setType("IF");
+                    nodeP.addCondition(ce.getCondition().toString());
+                    addNodePredicate(nodeP);
+                }
             } else if (node instanceof WhileStmt) {
                 WhileStmt ce = (WhileStmt) node;
-                System.out.println("WHILE "+ce.getCondition().asBinaryExpr().toString());
-                ce.walk(nd ->{
-                    if (nd instanceof UnaryExpr)
+                List<String> ConditionList = extractCondition(ce.getCondition().toString(), false);
+                if (ConditionList.size() > 0)
+                {
+                    for (String condition : ConditionList)
                     {
-                        //UnaryExpr ndun = (UnaryExpr) nd;
-                        //System.out.println("Unary "+ndun.toString());
-                    } else if (nd instanceof BinaryExpr)
-                    {
-                        BinaryExpr ndun = (BinaryExpr) nd;
-                        if (ndun.toString().indexOf("(") < 0)
-                        {
-                            predicateNode nodeP = new predicateNode();
-                            nodeP.setType("While");
-                            nodeP.addCondition(ndun.toString());
-                            addNodePredicate(nodeP);
-                        }
-                    } 
-                });
+                        predicateNode nodeP = new predicateNode();
+                        nodeP.setType("WHILE");
+                        nodeP.addCondition(condition);
+                        addNodePredicate(nodeP);
+                    }
+                } else
+                {
+                    predicateNode nodeP = new predicateNode();
+                    nodeP.setType("WHILE");
+                    nodeP.addCondition(ce.getCondition().toString());
+                    addNodePredicate(nodeP);
+                }
             } else if (node instanceof DoStmt) {
                 DoStmt ce = (DoStmt) node;
-                System.out.println("DO "+ce.getCondition().asBinaryExpr().toString());
-                ce.walk(nd ->{
-                    if (nd instanceof UnaryExpr)
+                List<String> ConditionList = extractCondition(ce.getCondition().toString(), false);
+                if (ConditionList.size() > 0)
+                {
+                    for (String condition : ConditionList)
                     {
-                        //UnaryExpr ndun = (UnaryExpr) nd;
-                        //System.out.println("Unary "+ndun.toString());
-                    } else if (nd instanceof BinaryExpr)
-                    {
-                        BinaryExpr ndun = (BinaryExpr) nd;
                         predicateNode nodeP = new predicateNode();
-                        nodeP.setType("Do");
-                        nodeP.addCondition(ndun.toString());
+                        nodeP.setType("DO");
+                        nodeP.addCondition(condition);
                         addNodePredicate(nodeP);
-                        //System.out.println("Binary "+ndun.toString());
-                    } 
-                });
+                    }
+                } else
+                {
+                    predicateNode nodeP = new predicateNode();
+                    nodeP.setType("DO");
+                    nodeP.addCondition(ce.getCondition().toString());
+                    addNodePredicate(nodeP);
+                }
             } else if (node instanceof ForStmt) {
                 ForStmt ce = (ForStmt) node;
-                System.out.println("FOR "+ce.getCompare().toString());
-                predicateNode nodeP = new predicateNode();
-                nodeP.setType("For");
-                nodeP.addCondition(ce.getCompare().toString());
-                addNodePredicate(nodeP);
-                /*ce.walk(nd ->{
-                    if (nd instanceof UnaryExpr)
+                List<String> ConditionList = extractCondition(ce.getCompare().toString(), true);
+                if (ConditionList.size() > 0)
+                {
+                    for (String condition : ConditionList)
                     {
-                        //UnaryExpr ndun = (UnaryExpr) nd;
-                        //System.out.println("Unary "+ndun.toString());
-                    } else if (nd instanceof BinaryExpr)
-                    {
-                        BinaryExpr ndun = (BinaryExpr) nd;
                         predicateNode nodeP = new predicateNode();
-                        nodeP.setType("For");
-                        nodeP.addCondition(ndun.asBinaryExpr());
+                        nodeP.setType("FOR");
+                        nodeP.addCondition(condition);
                         addNodePredicate(nodeP);
-                        //System.out.println("Binary "+ndun.toString());
-                    } 
-                });*/
+                    }
+                } else
+                {
+                    predicateNode nodeP = new predicateNode();
+                    nodeP.setType("FOR");
+                    nodeP.addCondition(ce.getCompare().toString());
+                    addNodePredicate(nodeP);
+                }
             }
         });
         this.DistinctOperator.addAll(this.operator);
@@ -290,6 +294,27 @@ public class method{
     {
         // McCabe CC => V(g) = P + 1;
         return this.NodePredicate.size() + 1;
+    }
+    
+    private List<String> extractCondition(String str,boolean For)
+    {
+        List<String> matchList = new ArrayList<String>();
+        Pattern regex;
+        if (For)
+        {
+            regex = Pattern.compile("\\[(.*?)\\]");
+        } else
+        {
+            regex = Pattern.compile("\\((.*?)\\)");
+        }
+        Matcher regexMatcher = regex.matcher(str);
+
+        while (regexMatcher.find()) 
+        {//Finds Matching Pattern in String
+            matchList.add(regexMatcher.group(1));//Fetching Group from String
+        }
+
+        return matchList;
     }
     
     
