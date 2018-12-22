@@ -34,7 +34,7 @@ public class test {
         {
             
         }
-        while (hasil > 10)
+        while ((hasil > 10) && (hasil <=20))
         {
             hasil++;
         }
@@ -48,9 +48,39 @@ public class test {
          }
         
         }
-        
         return hasil;
     }
 
+    public float average()
+    {
+        int[] value = null;
+        int i, minimum = 0, maximum = 0;
+        i = 1;
+        int total_input = 0;
+        int total_valid = 0;
+        int sum = 0;
+        
+        while ((value[i] != -999) && (total_input <  100))
+        {
+            total_input++;
+            if ((value[i] >= minimum) && (value[i] <= maximum))
+            {
+                total_valid++;
+                sum += value[i];
+            } 
+            i++;
+        }
+        
+        float hasil;
+        if (total_valid>0)
+        {
+            hasil = (sum/total_valid);
+            return hasil;
+        } else
+        {
+            return -999;
+        }
+        
+    }
     
 }

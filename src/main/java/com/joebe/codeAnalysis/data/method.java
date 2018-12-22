@@ -123,6 +123,7 @@ public class method{
             // Locate the predicate node
             } else if (node instanceof IfStmt) {
                 IfStmt ce = (IfStmt) node;
+                System.out.println(ce.getCondition().toString());
                 ce.walk(nd ->{
                     if (nd instanceof BinaryExpr)
                     {
@@ -138,6 +139,7 @@ public class method{
                 });
             } else if (node instanceof WhileStmt) {
                 WhileStmt ce = (WhileStmt) node;
+                System.out.println("WHILE "+ce.getCondition().asBinaryExpr().toString());
                 ce.walk(nd ->{
                     if (nd instanceof UnaryExpr)
                     {
@@ -146,15 +148,18 @@ public class method{
                     } else if (nd instanceof BinaryExpr)
                     {
                         BinaryExpr ndun = (BinaryExpr) nd;
-                        predicateNode nodeP = new predicateNode();
-                        nodeP.setType("While");
-                        nodeP.addCondition(ndun.toString());
-                        addNodePredicate(nodeP);
-                        //System.out.println("Binary "+ndun.toString());
+                        if (ndun.toString().indexOf("(") < 0)
+                        {
+                            predicateNode nodeP = new predicateNode();
+                            nodeP.setType("While");
+                            nodeP.addCondition(ndun.toString());
+                            addNodePredicate(nodeP);
+                        }
                     } 
                 });
             } else if (node instanceof DoStmt) {
                 DoStmt ce = (DoStmt) node;
+                System.out.println("DO "+ce.getCondition().asBinaryExpr().toString());
                 ce.walk(nd ->{
                     if (nd instanceof UnaryExpr)
                     {
@@ -172,6 +177,7 @@ public class method{
                 });
             } else if (node instanceof ForStmt) {
                 ForStmt ce = (ForStmt) node;
+                System.out.println("FOR "+ce.getCompare().toString());
                 predicateNode nodeP = new predicateNode();
                 nodeP.setType("For");
                 nodeP.addCondition(ce.getCompare().toString());
