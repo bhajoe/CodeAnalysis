@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class predicateNode {
     private String type;
-    private ArrayList<BinaryExpr> condition;
+    private ArrayList<String> condition;
 
     public predicateNode() {
         this.condition = new ArrayList<>();
@@ -28,11 +28,11 @@ public class predicateNode {
         this.type = type;
     }
 
-    public ArrayList<BinaryExpr> getCondition() {
+    public ArrayList<String> getCondition() {
         return condition;
     }
 
-    public void addCondition(BinaryExpr condition) {
+    public void addCondition(String condition) {
         this.condition.add(condition);
     }
     

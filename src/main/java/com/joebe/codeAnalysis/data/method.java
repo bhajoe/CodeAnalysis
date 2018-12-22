@@ -131,7 +131,7 @@ public class method{
                         {
                             predicateNode nodeP = new predicateNode();
                             nodeP.setType("IF");
-                            nodeP.addCondition(ndun.asBinaryExpr());
+                            nodeP.addCondition(ndun.toString());
                             addNodePredicate(nodeP);
                         }
                     } 
@@ -148,7 +148,7 @@ public class method{
                         BinaryExpr ndun = (BinaryExpr) nd;
                         predicateNode nodeP = new predicateNode();
                         nodeP.setType("While");
-                        nodeP.addCondition(ndun.asBinaryExpr());
+                        nodeP.addCondition(ndun.toString());
                         addNodePredicate(nodeP);
                         //System.out.println("Binary "+ndun.toString());
                     } 
@@ -165,14 +165,18 @@ public class method{
                         BinaryExpr ndun = (BinaryExpr) nd;
                         predicateNode nodeP = new predicateNode();
                         nodeP.setType("Do");
-                        nodeP.addCondition(ndun.asBinaryExpr());
+                        nodeP.addCondition(ndun.toString());
                         addNodePredicate(nodeP);
                         //System.out.println("Binary "+ndun.toString());
                     } 
                 });
             } else if (node instanceof ForStmt) {
                 ForStmt ce = (ForStmt) node;
-                ce.walk(nd ->{
+                predicateNode nodeP = new predicateNode();
+                nodeP.setType("For");
+                nodeP.addCondition(ce.getCompare().toString());
+                addNodePredicate(nodeP);
+                /*ce.walk(nd ->{
                     if (nd instanceof UnaryExpr)
                     {
                         //UnaryExpr ndun = (UnaryExpr) nd;
@@ -186,7 +190,7 @@ public class method{
                         addNodePredicate(nodeP);
                         //System.out.println("Binary "+ndun.toString());
                     } 
-                });
+                });*/
             }
         });
         this.DistinctOperator.addAll(this.operator);
