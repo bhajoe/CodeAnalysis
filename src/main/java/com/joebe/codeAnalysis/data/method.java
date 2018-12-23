@@ -31,9 +31,9 @@ import javax.sound.midi.Soundbank;
  */
 public class method{
     private MethodDeclaration md;
-    private ArrayList<String> operator;
+    private ArrayList<operandOperator> operator;
     private ArrayList<operandOperator> operand;
-    private Set<String> DistinctOperator;
+    private Set<operandOperator> DistinctOperator;
     private Set<operandOperator> DistictOperand;
     private Set<predicateNode> NodePredicate;
     private float HProgramLevel;
@@ -101,15 +101,20 @@ public class method{
     public void ExtractBody()
     {
         md.walk(node -> {
+            // Get All Operators
             if (node instanceof UnaryExpr) {
                 UnaryExpr be = (UnaryExpr) node;
-                this.operator.add(be.getOperator().asString());
+                operandOperator opr = new operandOperator(be.getOperator().asString(), be.getBegin().get().line, be.getBegin().get().column);
+                this.operator.add(opr);
             } else if (node instanceof AssignExpr) {
                 AssignExpr be = (AssignExpr) node;
-                this.operator.add(be.getOperator().asString());
+                operandOperator opr = new operandOperator(be.getOperator().asString(), be.getBegin().get().line, be.getBegin().get().column);
+                this.operator.add(opr);
             } else if (node instanceof BinaryExpr) {
                 BinaryExpr be = (BinaryExpr) node;
-                this.operator.add(be.getOperator().asString());
+                operandOperator opr = new operandOperator(be.getOperator().asString(), be.getBegin().get().line, be.getBegin().get().column);
+                this.operator.add(opr);
+            // Get All Operands
             } else if (node instanceof PrimitiveType) {
                 PrimitiveType nm = (PrimitiveType) node;
                 operandOperator opn = new operandOperator(nm.getType().asString(), nm.getBegin().get().line, nm.getBegin().get().column);
@@ -207,8 +212,36 @@ public class method{
                 }
             }
         });
-        this.DistinctOperator.addAll(this.operator);
-        this.DistictOperand.addAll(this.operand);
+        this.DistinctOperator.addAll(removeDuplicateOperandOperator(this.operator));
+        this.DistictOperand.addAll(removeDuplicateOperandOperator(this.operand));
+    }
+    
+    private ArrayList<operandOperator> removeDuplicateOperandOperator(ArrayList<operandOperator> op)
+    {
+        ArrayList<operandOperator> tempOp = new ArrayList<>();
+        
+        for (operandOperator opObj : op)
+        {
+            if (!isOperandOperatorDuplicate(opObj, tempOp))
+            {
+                tempOp.add(opObj);
+            }
+        }
+        return tempOp;
+        
+    }
+    
+    private boolean isOperandOperatorDuplicate(operandOperator op, ArrayList<operandOperator> list)
+    {
+        boolean result = false;
+        for (operandOperator tempObj : list)
+        {
+            if (op.getOperandOperator().equals(tempObj.getOperandOperator()))
+            {
+               result = true;
+            } 
+        }
+        return result;
     }
     
     public int getOperator()
@@ -290,7 +323,6 @@ public class method{
             break;
           }
         }
-
         return result;
     }
     
@@ -322,7 +354,12 @@ public class method{
         return matchList;
     }
     
-    public ArrayList<String> getOperators()
+    public ArrayList<operandOperator> getOperands()
+    {
+        return this.operand;
+    }
+    
+    public ArrayList<operandOperator> getOperators()
     {
         return this.operator;
     }

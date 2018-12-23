@@ -5,6 +5,7 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.joebe.codeAnalysis.file.DirExplorer;
 import com.joebe.codeAnalysis.data.classObject;
 import com.joebe.codeAnalysis.data.method;
+import com.joebe.codeAnalysis.data.operandOperator;
 import com.joebe.codeAnalysis.data.predicateNode;
 import java.io.File;
 import java.io.IOException;
@@ -63,13 +64,13 @@ public class Demo {
                 System.out.println(" method: "+md.getMd().getName());
                 System.out.println("      - Operator :"+md.getOperator());
                 System.out.println("      - Operand : "+md.getOperand());
-                if (md.getOperators().size() > 0)
+                if (md.getOperands().size() > 0)
                 {
-                    /*System.out.println("      - Operator : ");
-                    for (operator ops : md.md.getOperators())
+                    System.out.println("      - Operator : ");
+                    for (operandOperator ops : md.getOperands())
                     {
-                        System.out.println("           - : "+nd.getType()+" "+nd.getCondition().toString());
-                    }*/
+                        System.out.println("           - : "+ops.getOperandOperator()+" "+ops.getLine());
+                    }
                 }
                 System.out.println("      - Distinct Operator :"+md.getDistinctOperator());
                 System.out.println("      - Distinct Operand : "+md.getDistinctOperand());

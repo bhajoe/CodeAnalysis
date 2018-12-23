@@ -10,18 +10,18 @@ package com.joebe.codeAnalysis.data;
  * @author bayup
  */
 public class operandOperator {
-    private String operand;
+    private String operandOperator;
     private int line;
     private int column;
 
     public operandOperator(String operand, int line, int column) {
-        this.operand = operand;
+        this.operandOperator = operand;
         this.line = line;
         this.column = column;
     }
 
-    public String getOperand() {
-        return operand;
+    public String getOperandOperator() {
+        return operandOperator;
     }
 
     public int getLine() {
@@ -31,6 +31,4 @@ public class operandOperator {
     public int getColumn() {
         return column;
     }
-    
-       
 }
