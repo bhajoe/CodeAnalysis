@@ -63,6 +63,14 @@ public class Demo {
                 System.out.println(" method: "+md.getMd().getName());
                 System.out.println("      - Operator :"+md.getOperator());
                 System.out.println("      - Operand : "+md.getOperand());
+                if (md.getOperators().size() > 0)
+                {
+                    /*System.out.println("      - Operator : ");
+                    for (operator ops : md.md.getOperators())
+                    {
+                        System.out.println("           - : "+nd.getType()+" "+nd.getCondition().toString());
+                    }*/
+                }
                 System.out.println("      - Distinct Operator :"+md.getDistinctOperator());
                 System.out.println("      - Distinct Operand : "+md.getDistinctOperand());
                 System.out.println("      - Volume : "+md.getHVolume());

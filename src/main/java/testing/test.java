@@ -18,6 +18,10 @@ public class test {
         int avg;
         avg = (a + b + c) / 3;
         System.out.printf("avg = %d",avg);
+        while (true)
+        {
+            
+        }
     }
     
     public int hitung (int p, int l)

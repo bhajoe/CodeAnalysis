@@ -32,9 +32,9 @@ import javax.sound.midi.Soundbank;
 public class method{
     private MethodDeclaration md;
     private ArrayList<String> operator;
-    private ArrayList<String> operand;
+    private ArrayList<operandOperator> operand;
     private Set<String> DistinctOperator;
-    private Set<String> DistictOperand;
+    private Set<operandOperator> DistictOperand;
     private Set<predicateNode> NodePredicate;
     private float HProgramLevel;
     private float HVolume;
@@ -112,17 +112,21 @@ public class method{
                 this.operator.add(be.getOperator().asString());
             } else if (node instanceof PrimitiveType) {
                 PrimitiveType nm = (PrimitiveType) node;
-                this.operand.add(nm.getType().asString());
+                operandOperator opn = new operandOperator(nm.getType().asString(), nm.getBegin().get().line, nm.getBegin().get().column);
+                this.operand.add(opn);
             } else if (node instanceof NameExpr) {
                 NameExpr nm = (NameExpr) node;
-                this.operand.add(nm.getNameAsString());
+                operandOperator opn = new operandOperator(nm.getNameAsString(), nm.getBegin().get().line, nm.getBegin().get().column);
+                this.operand.add(opn);
             } else if (node instanceof LiteralExpr) {
                 LiteralExpr nm = (LiteralExpr) node;
-                this.operand.add(nm.toString());
+                operandOperator opn = new operandOperator(nm.toString(), nm.getBegin().get().line, nm.getBegin().get().column);
+                this.operand.add(opn);
             } else if (node instanceof VariableDeclarationExpr) {
                 VariableDeclarationExpr nm = (VariableDeclarationExpr) node;
                 nm.getVariables().forEach(var -> {
-                    this.operand.add(var.getNameAsString());    
+                    operandOperator opn = new operandOperator(var.getNameAsString(), nm.getBegin().get().line, nm.getBegin().get().column);
+                    this.operand.add(opn);    
                 });
             // Locate the predicate node
             } else if (node instanceof IfStmt) {
@@ -288,7 +292,8 @@ public class method{
         }
 
         return result;
-     }
+    }
+    
     
     public int getCyclomaticComplexity()
     {
@@ -317,5 +322,9 @@ public class method{
         return matchList;
     }
     
+    public ArrayList<String> getOperators()
+    {
+        return this.operator;
+    }
     
 }
