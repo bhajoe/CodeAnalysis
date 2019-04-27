@@ -15,6 +15,9 @@ import java.util.ArrayList;
 public class predicateNode {
     private String type;
     private ArrayList<String> condition;
+    private String body;
+    private int start;
+    private int end;
 
     public predicateNode() {
         this.condition = new ArrayList<>();
@@ -35,6 +38,5 @@ public class predicateNode {
     public void addCondition(String condition) {
         this.condition.add(condition);
     }
-    
     
 }

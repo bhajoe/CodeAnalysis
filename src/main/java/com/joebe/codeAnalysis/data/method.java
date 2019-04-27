@@ -31,6 +31,7 @@ import javax.sound.midi.Soundbank;
  */
 public class method{
     private MethodDeclaration md;
+    private ArrayList<loopSegment> loop;
     private ArrayList<operandOperator> operator;
     private ArrayList<operandOperator> operand;
     private Set<operandOperator> DistinctOperator;
@@ -46,6 +47,7 @@ public class method{
 
     public method(MethodDeclaration md) {
         this.md = md;
+        this.loop = new ArrayList<>();
         this.operand = new ArrayList<>();
         this.operator =  new ArrayList<>();
         this.DistinctOperator = new HashSet<>();
@@ -362,6 +364,15 @@ public class method{
     public ArrayList<operandOperator> getOperators()
     {
         return this.operator;
+    }
+
+    public ArrayList<loopSegment> getLoop() {
+        return loop;
+    }
+    
+    public void addLoopSegment(loopSegment ls)
+    {
+        this.loop.add(ls);
     }
     
 }

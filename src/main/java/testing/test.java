@@ -87,4 +87,36 @@ public class test {
         
     }
     
+    public void statementCheck()
+    {
+            // TODO code application logic here
+         int x = 10, y = 20;
+        boolean decision = false;
+         if(x < y) 
+            System.out.println(x + " is less than " + y + "\n");
+         if (decision)
+            System.out.println("always false\n");
+         if (isPositive(x))
+            System.out.println(x + " is positive: " + isPositive(x) + "\n");
+         if (x > y)
+        {
+            System.out.println(x + " greater than " + y + "\n");
+        }
+        else
+        {
+            System.out.println("Optional else used when there are two branches");
+            System.out.println(x + " less than " + y + "\n");
+        }
+        if (decision == false) 
+            System.out.println("Yes, variable decision is false\n");  
+        if (decision = true) 
+            System.out.println("Variable decision is assigned to true"); 
+    }
+
+    public static boolean isPositive (int n1)
+    {
+        return (n1 > -1);
+    }
+
+    
 }

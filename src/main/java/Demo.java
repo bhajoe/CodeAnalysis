@@ -63,10 +63,18 @@ public class Demo {
             {
                 System.out.println(" method: "+md.getMd().getName());
                 System.out.println("      - Operator :"+md.getOperator());
+                if (md.getOperators().size() > 0)
+                {
+                    System.out.println("      - Operator : ");
+                    for (operandOperator ops : md.getOperators())
+                    {
+                        System.out.println("           - : "+ops.getOperandOperator()+" "+ops.getLine());
+                    }
+                }
                 System.out.println("      - Operand : "+md.getOperand());
                 if (md.getOperands().size() > 0)
                 {
-                    System.out.println("      - Operator : ");
+                    System.out.println("      - Operand : ");
                     for (operandOperator ops : md.getOperands())
                     {
                         System.out.println("           - : "+ops.getOperandOperator()+" "+ops.getLine());
